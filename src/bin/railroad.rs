@@ -97,6 +97,7 @@ fn dia_from_stdin(
 
     let mut buf = String::new();
     io::stdin().read_to_string(&mut buf)?;
+    buf = buf.lines().collect::<String>();
     let diagram = railroad_dsl::compile(&buf, css).map_err(|e| Box::new(e.with_path("<stdin>")))?;
     match format {
         Format::SVG => {
@@ -119,7 +120,7 @@ fn dia_from_files(
     let mut err = Ok(());
     for input in inputs {
         let output = PathBuf::from(&input).with_extension(format.file_extension());
-        let buf = match fs::read_to_string(input) {
+        let mut buf = match fs::read_to_string(input) {
             Err(e) => {
                 eprintln!("error reading file {input}: {e}");
                 err = Err(Error::IO(e));
@@ -127,6 +128,7 @@ fn dia_from_files(
             }
             Ok(buf) => buf,
         };
+        buf = buf.lines().collect::<String>();
         let diagram = match railroad_dsl::compile(&buf, css) {
             Err(e) => {
                 eprintln!("syntax error:\n{}", e.clone().with_path(input));
