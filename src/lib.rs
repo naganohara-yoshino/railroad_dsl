@@ -123,6 +123,7 @@ mod tests {
                         .unwrap()
                         .read_to_string(&mut buffer)
                         .unwrap();
+                    buffer = buffer.lines().collect::<String>();
                     if let Err(e) = compile(&buffer, DEFAULT_CSS) {
                         panic!("Failed to compile {}", e.with_path(filename));
                     }
