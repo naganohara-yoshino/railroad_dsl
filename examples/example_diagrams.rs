@@ -19,6 +19,7 @@ fn output(outname: &str, style: &railroad::Stylesheet) -> Result<(), io::Error> 
                 println!("Generating from `{}`", filename);
                 let mut buffer = String::new();
                 fs::File::open(path.path())?.read_to_string(&mut buffer)?;
+                buffer = buffer.lines().collect::<String>();
                 let diagram = railroad_dsl::compile(&buffer, style.stylesheet()).unwrap();
                 write!(outp, "<h3>Generated from <i>`{}`</i></h3>", filename)?;
                 write!(
